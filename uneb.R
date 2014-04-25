@@ -1,10 +1,15 @@
 # Visualization of how students performed across
-# different districst in Uganda Primary Leaving 
+# different districts in Uganda Primary Leaving 
 # Examinations 2013/2014. 
 # Plotting the Primary leaving Exams data on a color-coded map,
 # in less than 100 lines of R code. 
 
 # Author: Richard Ngamita 'ngamita@gmail.com'
+
+
+# Disclaimer: These methods here may not be the best solutions,
+# but seemed the easiest for getting started with spatial data 
+# in R. For any feedback: ngamita@gmail.com
 
 
 # Load the rgdal library.
@@ -89,15 +94,13 @@ districts@data$District <- NULL
 # Re-name the colname to make sense. 
 colnames(districts@data)[1] <- 'Districts_2013'
 
-library(GISTools)
-library(RColorBrewer)
+
 
 # Now the shape ﬁle or SpatialPolygonsDataFrame contains our added ﬁeld called ‘Division1’ 
 # which contains the count of the number of first grades 
 #  We can use this to create a choropleth map with:
 
 # First remove incomplete rows/NA values, disctricts without results.
-#districts@data <- districtsdata[complete.cases(districts_data@data), ] # getting a bug. 
 districts@data <- na.omit(districts)
 
 # Using Basic plot() function
@@ -135,11 +138,17 @@ all.inside=TRUE)], axes=F)
 
 # Save file locally. 
 png(filename="your/file/location/name.png")
-plot(fit)
+plot(out_put)
 dev.off()
 
 
 #Part 2:
+
+library(GISTools)
+library(RColorBrewer)
+
+# Clear the missing values issue. 
+districts@data <- districts@data[complete.cases(districts@data), ] # getting a bug. 
 
 # Use choropleth function show performing districts. 
 choropleth(districts, districts$Division1)
@@ -147,7 +156,7 @@ choropleth(districts, districts$Division1)
 #  map looks fine, but lets make it better with a few extra commands.
 
 # Set colour and number of classes
-shades <- auto.shading(districts_data$Division1, n = 9, cols = brewer.pal(9, "Blues"))
+shades <- auto.shading(districts$Division1, n = 9, cols = brewer.pal(9, "Blues"))
 
 # Draw the map
 choropleth(districts, districts$Division1, shades)
@@ -160,3 +169,11 @@ title("Count of Division 1's in PLE, 2013")
 
 # add Notth arrow
 north.arrow(27.92452, 3.30194, 10)
+
+
+# Working with GoogleMaps and OpenStreetMap.
+libary (ggmap) 
+
+# Further reading: check out these solutions by Antonio
+# https://sites.google.com/site/rodriguezsanchezf/news/usingrasagis
+
