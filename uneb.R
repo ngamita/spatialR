@@ -133,6 +133,10 @@ all.inside=TRUE)], axes=F)
 
 # Go ahead and add title, legent, scale etc. 
 
+# Save file locally. 
+png(filename="your/file/location/name.png")
+plot(fit)
+dev.off()
 
 
 #Part 2:
